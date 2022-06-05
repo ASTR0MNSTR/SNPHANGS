@@ -18,24 +18,23 @@ class HelpingModule:
                 return False
             return True
         
-        '''
         def compare_type(type_sn, in_type):
             list_type = type_sn.split(',')
-            for item in list_type:
-                if len(item) > 2:
-                    item = item[0:1:1]
-                if item == in_type:
-                    return True
-        HelpingModule.compare_type(item['claimedtype'], self.type)
-        '''
+            for i in range(len(in_type)):
+                for item in list_type:
+                    if item.startswith(in_type[i]):
+                        return True
+        
+        #type.startwith?
+    
 
 class DataLink(HelpingModule):
 
-    def __init__(self, phang_path, sn_path, outpath, start_date, type):
+    def __init__(self, phang_path, sn_path, outpath, start_date, types):
         self.phang_path = phang_path
         self.sn_path = sn_path
         self.start_date = start_date.split('/')
-        self.type = type
+        self.types = types.split(', ')
         self.dict_sn = []
         self.dict_ph = []
         self.dict_out = []
@@ -66,7 +65,7 @@ class DataLink(HelpingModule):
             
             for j in range(len(names_ngc_ic)):
                 for i in range(len(self.list_ph)):
-                    if re.sub(' ', '', names_ngc_ic[j]) == self.list_ph[i] and HelpingModule.compare_date(item['discoverdate'], self.start_date):
+                    if re.sub(' ', '', names_ngc_ic[j]) == self.list_ph[i] and HelpingModule.compare_date(item['discoverdate'], self.start_date) and HelpingModule.compare_type(item['claimedtype'], self.types):
                         self.dict_out.append(item)
 
     def plotting(self):
@@ -78,7 +77,9 @@ class DataLink(HelpingModule):
         print(table)
 
 if __name__ == '__main__':
-    obj = DataLink('PHANGS.csv', 'SNDATA.csv', 'output.csv', '2017/1/1', 'Ia')
+    start_date = input('Start date in YY/MM/DD: ')
+    types = input('Write types you look for here: ')
+    obj = DataLink('PHANGS.csv', 'SNDATA.csv', 'output.csv', start_date, types)
     obj.csv_reader_ph()
     obj.csv_reader_sn()
     obj.main()
