@@ -24,8 +24,6 @@ class HelpingModule:
                 for item in list_type:
                     if item.startswith(in_type[i]):
                         return True
-        
-        #type.startwith?
     
 
 class DataLink(HelpingModule):
@@ -34,6 +32,7 @@ class DataLink(HelpingModule):
         self.phang_path = phang_path
         self.sn_path = sn_path
         self.start_date = start_date.split('/')
+        self.outpath = outpath
         self.types = types.split(', ')
         self.dict_sn = []
         self.dict_ph = []
@@ -75,12 +74,20 @@ class DataLink(HelpingModule):
             row = [item['event'], item['claimedtype'], item['host'], item['discoverdate']]
             table.add_row(row)
         print(table)
+    
+    def file_output(self):
+        with open(self.outpath, 'w', newline = '') as out:
+            writer = csv.writer(out, quotechar=',')
+            for item in self.dict_out:
+                writer.writerow([item['event'], item['claimedtype'], item['host'], item['discoverdate']])
+
 
 if __name__ == '__main__':
     start_date = input('Start date in YY/MM/DD: ')
-    types = input('Write types you look for here: ')
+    types = input('Write types you look for here (II, Ia, Ib etc.): ')
     obj = DataLink('PHANGS.csv', 'SNDATA.csv', 'output.csv', start_date, types)
     obj.csv_reader_ph()
     obj.csv_reader_sn()
     obj.main()
     obj.plotting()
+    obj.file_output()
