@@ -55,8 +55,9 @@ class DataLink(HelpingModule):
             lines = inputfile.readlines()
             content = [item.strip() for item in lines]
             for item in content:
-                names = item.split(' ')
+                names = item.split(',')
                 self.list_ph.append(names)
+            print(self.list_ph)
 
     def csv_reader_sn(self):
         with open(self.sn_path, encoding='utf-8') as csvfile:
